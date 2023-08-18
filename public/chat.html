@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Battista Chatbot</title>
+    <link rel="stylesheet" href="https://s3-us-west-2.amazonaws.com/s.cdpn.io/323909/animate.css">
+    <link rel="stylesheet" href="chat.css">
+</head>
+
+<body class="body">
+
+    <!-- ***** SVG Sprites ***** -->
+    <svg style="display: none;">
+
+        <symbol id="icon-chatbot-edit" viewBox="0 0 18 18">
+            <path d="M3.27825 14.4C3.32325 14.4 3.36825 14.3955 3.41325 14.3888L7.19775 13.725C7.24275 13.716 7.2855 13.6958 7.317 13.662L16.8548 4.12425C16.8756 4.10343 16.8922 4.07871 16.9034 4.05149C16.9147 4.02427 16.9205 3.99509 16.9205 3.96563C16.9205 3.93616 16.9147 3.90698 16.9034 3.87976C16.8922 3.85254 16.8756 3.82782 16.8548 3.807L13.1153 0.06525C13.0725 0.0225 13.0163 0 12.9555 0C12.8948 0 12.8385 0.0225 12.7958 0.06525L3.258 9.603C3.22425 9.63675 3.204 9.67725 3.195 9.72225L2.53125 13.5068C2.50936 13.6273 2.51718 13.7513 2.55404 13.8682C2.59089 13.985 2.65566 14.0911 2.74275 14.1773C2.89125 14.3213 3.078 14.4 3.27825 14.4ZM4.79475 10.476L12.9555 2.3175L14.6048 3.96675L6.444 12.1253L4.44375 12.4785L4.79475 10.476ZM17.28 16.29H0.72C0.32175 16.29 0 16.6118 0 17.01V17.82C0 17.919 0.081 18 0.18 18H17.82C17.919 18 18 17.919 18 17.82V17.01C18 16.6118 17.6783 16.29 17.28 16.29Z" />
+        </symbol>
+     
+        <symbol id="icon-chatbot-delete" viewBox="0 0 18 18">
+            <path d="M3 18C2.45 18 1.979 17.804 1.587 17.412C1.195 17.02 0.999333 16.5493 1 16V3H0V1H5V0H11V1H16V3H15V16C15 16.55 14.804 17.021 14.412 17.413C14.02 17.805 13.5493 18.0007 13 18H3ZM13 3H3V16H13V3ZM5 14H7V5H5V14ZM9 14H11V5H9V14Z" />
+        </symbol>
+
+        <symbol id="icon-chatbot-confirm" viewBox="0 0 19 14">
+            <path d="M6.63618 14L0 7.36383L1.65904 5.70478L6.63618 10.6819L17.3181 0L18.9771 1.65904L6.63618 14Z" />
+        </symbol>
+
+        <symbol id="icon-chatbot-cancel" viewBox="0 0 12 12">
+            <path d="M1.2 12L0 10.8L4.8 6L0 1.2L1.2 0L6 4.8L10.8 0L12 1.2L7.2 6L12 10.8L10.8 12L6 7.2L1.2 12Z"/>
+        </symbol>
+
+        <symbol id="icon-message" viewBox="0 0 14 14">
+            <path d="M12.9231 0.5H1.07694C0.791324 0.5 0.517404 0.614137 0.315443 0.817301C0.113481 1.02047 1.95019e-05 1.29602 1.95019e-05 1.58333V12.4167C-0.00122238 12.6232 0.056872 12.8258 0.167319 13C0.277767 13.1741 0.435867 13.3125 0.622615 13.3984C0.764923 13.4651 0.919962 13.4998 1.07694 13.5C1.32975 13.4994 1.57417 13.4087 1.76684 13.2441C1.77006 13.242 1.77299 13.2395 1.77559 13.2366L3.93751 11.3333H12.9231C13.2087 11.3333 13.4826 11.2192 13.6846 11.016C13.8865 10.8129 14 10.5373 14 10.25V1.58333C14 1.29602 13.8865 1.02047 13.6846 0.817301C13.4826 0.614137 13.2087 0.5 12.9231 0.5ZM12.9231 10.25H3.93751C3.68391 10.2499 3.43841 10.3398 3.24425 10.5039L3.23617 10.5114L1.07694 12.4167V1.58333H12.9231V10.25Z" />
+        </symbol>
+
+        <symbol id="icon-caret-left" viewBox="0 0 5 10">
+            <path d="M4.83081 8.49649C4.93914 8.60673 5 8.75625 5 8.91216C5 9.06806 4.93914 9.21758 4.83081 9.32782C4.72248 9.43807 4.57556 9.5 4.42236 9.5C4.26915 9.5 4.12223 9.43807 4.0139 9.32782L0.169603 5.41567C0.115845 5.36115 0.0731905 5.29637 0.0440861 5.22504C0.0149817 5.15371 0 5.07723 0 5C0 4.92277 0.0149817 4.84629 0.0440861 4.77496C0.0731905 4.70363 0.115845 4.63885 0.169603 4.58433L4.0139 0.672175C4.12223 0.561933 4.26915 0.5 4.42236 0.5C4.57556 0.5 4.72248 0.561933 4.83081 0.672175C4.93914 0.782417 5 0.931936 5 1.08784C5 1.24375 4.93914 1.39327 4.83081 1.50351L1.39545 4.99951L4.83081 8.49649Z" />
+        </symbol>
+        
+        <symbol id="icon-send" viewBox="0 0 16 16">
+            <path d="M2.08722 1.08212C1.49322 0.785121 0.834221 1.35012 1.03772 1.98262L2.46672 6.42412C2.49482 6.51143 2.54639 6.58934 2.61579 6.6493C2.68519 6.70927 2.76976 6.74899 2.86022 6.76412L8.79472 7.75362C9.07322 7.80012 9.07322 8.20012 8.79472 8.24662L2.86072 9.23562C2.77016 9.25066 2.6855 9.29035 2.616 9.35032C2.5465 9.41029 2.49485 9.48824 2.46672 9.57562L1.03772 14.0186C0.834221 14.6511 1.49272 15.2161 2.08722 14.9191L14.5842 8.67162C15.1372 8.39512 15.1372 7.60662 14.5842 7.32962L2.08722 1.08212Z" />
+        </symbol>
+        
+ 
+         <!-- <svg class="icon icon-"><use xlink:href="#icon-"></use></svg> -->
+    </svg>
+
+    <div class="chatbot-page">
+
+        <!-- Sidebar -->
+        <div class="chatbot-sidebar">
+            <div class="chatbot-head">
+                <button id="newChatBtn" class="chatbot-btn-newchat">
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 6.85714H6.85714V12H5.14286V6.85714H0V5.14286H5.14286V0H6.85714V5.14286H12V6.85714Z" fill="white"/>
+                    </svg>
+                    Nuova chiacchierata
+                </button>
+            </div>
+            <div class="chatbot-history">
+                <!-- history-item -->
+                <div class="chatbot-history__item">
+                    <div class="chatbot-history__date">Luglio</div>
+                    <!-- history-link-active -->
+                    <div class="chatbot-history__link active">
+                        <svg class="icon icon-message"><use xlink:href="#icon-message"></use></svg>
+                        <div class="chatbot-history__title">Lorem Ipsum available</div>
+                        <input class="chatbot-history__input" value="Lorem Ipsum available"></input>
+                        <div class="chatbot-history__btns">
+                            <button class="chatbot-history__btn chatbot-history__btn_edit">
+                                <svg class="icon icon-chatbot-edit"><use xlink:href="#icon-chatbot-edit"></use></svg> 
+                            </button>
+                            <button class="chatbot-history__btn chatbot-history__btn_delete">
+                                <svg class="icon icon-chatbot-delete"><use xlink:href="#icon-chatbot-delete"></use></svg> </button>
+                            </button>
+                            <button class="chatbot-history__btn chatbot-history__btn_confirm">
+                                <svg class="icon icon-chatbot-confirm"><use xlink:href="#icon-chatbot-confirm"></use></svg> 
+                            </button>
+                            <button class="chatbot-history__btn chatbot-history__btn_cancel">
+                                <svg class="icon icon-chatbot-cancel"><use xlink:href="#icon-chatbot-cancel"></use></svg> </button>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- history-link -->
+                    <div class="chatbot-history__link">
+                        <svg class="icon icon-message"><use xlink:href="#icon-message"></use></svg>
+                        <div class="chatbot-history__title">Lorem Ipsum available</div>
+                        <input class="chatbot-history__input" value="Lorem Ipsum available"></input>
+                        <div class="chatbot-history__btns">
+                            <button class="chatbot-history__btn chatbot-history__btn_edit">
+                                <svg class="icon icon-chatbot-edit"><use xlink:href="#icon-chatbot-edit"></use></svg> 
+                            </button>
+                            <button class="chatbot-history__btn chatbot-history__btn_delete">
+                                <svg class="icon icon-chatbot-delete"><use xlink:href="#icon-chatbot-delete"></use></svg> </button>
+                            </button>
+                            <button class="chatbot-history__btn chatbot-history__btn_confirm">
+                                <svg class="icon icon-chatbot-confirm"><use xlink:href="#icon-chatbot-confirm"></use></svg> 
+                            </button>
+                            <button class="chatbot-history__btn chatbot-history__btn_cancel">
+                                <svg class="icon icon-chatbot-cancel"><use xlink:href="#icon-chatbot-cancel"></use></svg> </button>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- history-item -->
+                <div class="chatbot-history__item">
+                    <div class="chatbot-history__date">Giugno</div>
+                    <!-- history-link -->
+                    <div class="chatbot-history__link">
+                        <svg class="icon icon-message"><use xlink:href="#icon-message"></use></svg>
+                        <div class="chatbot-history__title">Lorem Ipsum available</div>
+                        <input class="chatbot-history__input" value="Lorem Ipsum available"></input>
+                        <div class="chatbot-history__btns">
+                            <button class="chatbot-history__btn chatbot-history__btn_edit">
+                                <svg class="icon icon-chatbot-edit"><use xlink:href="#icon-chatbot-edit"></use></svg> 
+                            </button>
+                            <button class="chatbot-history__btn chatbot-history__btn_delete">
+                                <svg class="icon icon-chatbot-delete"><use xlink:href="#icon-chatbot-delete"></use></svg> </button>
+                            </button>
+                            <button class="chatbot-history__btn chatbot-history__btn_confirm">
+                                <svg class="icon icon-chatbot-confirm"><use xlink:href="#icon-chatbot-confirm"></use></svg> 
+                            </button>
+                            <button class="chatbot-history__btn chatbot-history__btn_cancel">
+                                <svg class="icon icon-chatbot-cancel"><use xlink:href="#icon-chatbot-cancel"></use></svg> </button>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            
+            </div>
+            <div class="chatbot-footer">
+                <a href="#" class="chatbot-btn-back">
+                    <svg class="icon icon-caret-left"><use xlink:href="#icon-caret-left"></use></svg> 
+                    Torna a Confestetica
+                </a>
+            </div>
+        </div>
+
+
+        <!-- Main -->
+        <div class="chatbot-main">
+            <h1 class="chatbot-title">Battista</h1>
+            <div id="chatMessages" class="chatbot-messages">
+                <div class="chatbot-message chatbot-message_user">
+                    <div class="chatbot-message__container">
+                        <div class="chatbot-message__avatar" style="background-image: url(img/avatar-user.png);"></div>
+                        <div class="chatbot-message__text">
+                            <p>It is a long established fact?</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="chatbot-message chatbot-message_bot">
+                    <div class="chatbot-message__container">
+                    <div class="chatbot-message__avatar" style="background-image: url(img/avatar-bot.svg);"></div>
+                        <div class="chatbot-message__text">
+                            <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="chatFormMessage" class="chatbot-form">
+                <div class="chatbot-form__field">
+                    <input class="chatbot-form__input" placeholder="Fai una domanda"></input>
+                    <button class="chatbot-form__btn">
+                        <svg class="icon icon-send"><use xlink:href="#icon-send"></use></svg>
+                    </button>
+                    <div class="chatbot-form__loader">
+                        <div class="typing">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<!-- <script src="js/jquery-3.1.1.min.js"></script> -->
+<script src="chat.js"></script>
+
+</body>
+</html>
