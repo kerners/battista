@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import { useState  } from 'react'
+import { useState, useEffect  } from 'react'
 import * as timeago from "timeago.js"
 import {
   MainContainer,
@@ -8,7 +8,8 @@ import {
   Message,
   MessageInput,
   ConversationHeader,
-  TypingIndicator
+  TypingIndicator,
+  Avatar
 } from "@chatscope/chat-ui-kit-react"
 //import styles from "@chatscope/chat-ui-kit-styles/dist/default/styles.css";
 
@@ -75,6 +76,7 @@ export default function Home() {
     }
   })
 
+
   const submit = async () => {
     if(!userId) {
        alert("Inserisci un nome utente unico mai usato prima")
@@ -108,6 +110,13 @@ export default function Home() {
     }
     setText("")
   }
+
+  useEffect(() => {
+    const randomUserId = Math.floor(Math.random() * 1000000).toString();
+    setUserId(randomUserId);
+    console.log('user id: ' + randomUserId);
+  }, []); // The empty array ensures this useEffect only runs once, similar to componentDidMount
+
 
   return (
     <>
@@ -211,48 +220,50 @@ export default function Home() {
             </div>
         </div>
 
-        <MainContainer>
-          <ChatContainer>
-              <MessageList
-                   typingIndicator={
-                    botIsTyping ? (
-                      <TypingIndicator content="sto pensando..." />
-                    ) : null
-                   }
-                 >
-                  { 
-                   conversation.map((entry, index) => {
-                    return (
-                      <Message
-                        key={index}
-                        style={{ width: "90%" }}
-                        model={{
-                          type: "custom",
-                          sender: entry.speaker,
-                          position: "single",
-                          direction:
-                            entry.speaker === "bot" ? "incoming" : "outgoing"
-                        }}
-                      >
-                        <Message.CustomContent>
-                        <span  dangerouslySetInnerHTML={{__html: entry.message}} />
-                        </Message.CustomContent>
-                        <Message.Footer
-                           sentTime={timeago.format(entry.date)}
-                           sender={entry.speaker === 'bot' ? "Battista": "Utente"}
-                        />
-                        </Message>
-                    )
-                   })
-                  }
-                 </MessageList>
 
+        
+          
+        <div className="chatbot-main">
+          <MainContainer>
+          <h1 className="chatbot-title">Battista</h1>
+          <div id="chatMessages" className="chatbot-messages">
+            <ChatContainer>
+              <MessageList>
+              { 
+               conversation.map((entry, index) => {
+                return (
+                                
+                    <Message
+                      key={index}
+                      style={{ width: "90%" }}
+                      model={{
+                        type: "custom",
+                        sender: entry.speaker,
+                        position: "single",
+                        direction:
+                          entry.speaker === "bot" ? "incoming" : "outgoing"
+                      }}
+                    >
+                     
+                      <Message.CustomContent>
+                      <span  dangerouslySetInnerHTML={{__html: entry.message}} />
+                      </Message.CustomContent>
+                    
+                      <Avatar 
+                        src={ entry.speaker === "bot" ? "https://confestetica.kerners.co/html/img/avatar-bot.svg" : "https://confestetica.kerners.co/html/img/avatar-user.png" } name="Joe" />
 
-
-
-
-                 <MessageInput
-                    placeholder='Invia un messaggio'
+                    </Message>
+                                
+                )
+               })
+              }
+             </MessageList>
+            </ChatContainer>
+          </div>
+          <div id="chatFormMessage" className="chatbot-form">
+              <div className="chatbot-form__field">
+                <MessageInput
+                    placeholder="Fai una domanda"
                     onSend={submit}
                     onChange={(e, text) => {
                       setText(text)
@@ -262,15 +273,25 @@ export default function Home() {
                     disabled={botIsTyping}
                     className="chatbot-form__input"
                  />
-
-             </ChatContainer>
+                <button className="chatbot-form__btn">
+                  <svg className="icon icon-send"><use href="#icon-send"></use></svg>
+                </button>
+                <div className="chatbot-form__loader">
+                    <div className="typing">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+              </div>
+            </div>
           </MainContainer>
-https://chatscope.io/storybook/react/?path=/story/documentation-introduction--page
+        </div>
+      
+        
 
-<input placeholder="username" type="text" value={userId} onChange={(e:any) => setUserId(e.target.value)}/>
+
                  
-
-
 
 
       {/*        <div style={{padding: "10px"}} style={{display: "none"}}>
